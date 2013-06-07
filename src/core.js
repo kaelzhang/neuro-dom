@@ -1,7 +1,4 @@
-/**
- * @preserve Neuron core:dom v2.0(jQuerified)
- */
-;(function(K){
+'use strict';
 
 /**
  nodeType: 
@@ -26,22 +23,22 @@
     Node.DOCUMENT_FRAGMENT_NODE == 11
     Node.NOTATION_NODE == 12
  */
- 
- 
-/**
- *
- */
+
+var lang = require('neuro-lang');
+
+// exports
+module.exports = DOM;
+
+
 function isDOMSubject(el){
     var type;
-    return K.isWindow(el) || el && (type = el.nodeType) && (type === 1 || type === 9);
+    return lang.isWindow(el) || el && (type = el.nodeType) && (type === 1 || type === 9);
 };
 
 
-/**
- * filter an array or Array-like object. this method will change the origin subject
- * @param {Array|Object} array
- * @param {function(mixed, number)} filter
- */
+// filter an array or Array-like object. this method will change the origin subject
+// @param {Array|Object} array
+// @param {function(mixed, number)} filter
 function filterArrayObject(array, filter){
     var i = 0;
     
@@ -95,7 +92,6 @@ function DOMInit(selector, context){
     // use ECMAScript strict
     var element;
     
-    
     if(!selector){
         return this;
     }
@@ -112,7 +108,7 @@ function DOMInit(selector, context){
         return this;
     }
     
-    if(K.isString(selector)){
+    if(lang.isString(selector)){
     
         // give id special treatment, 
         if(REGEX_IS_ID.test(selector)){
@@ -176,7 +172,7 @@ function extend(name, method, type){
     var generator,
         host = DOMInit.prototype;
 
-    if(K.isPlainObject(name)){
+    if(lang.isPlainObject(name)){
         generator = IMPLEMENT_GENERATOR[method] || IMPLEMENT_GENERATOR.def;
         
         for(var n in name){
@@ -192,27 +188,20 @@ function extend(name, method, type){
 
 
 
-var 
-
 // save the current $ in window, for the future we need to return it back
-WIN = window,
-
-// store the original value of $
-_$ = WIN.$,
+var WIN = window;
     
-SELECTOR = K.S,
-    
-DOC = WIN.document,
-ROOT = DOM(DOC),
+var DOC = WIN.document;
+var ROOT = DOM(DOC);
 
-REGEX_IS_ID = /^#[\w\-]+$/,
+var REGEX_IS_ID = /^#[\w\-]+$/;
 
-atom = K._,
+var atom = {};
 
-AP = Array.prototype,
-slice = AP.slice,
+var AP = Array.prototype;
+var slice = AP.slice;
 
-makeArray = K.makeArray,
+var makeArray = lang.makeArray;
 
 
 /**
@@ -229,7 +218,7 @@ makeArray = K.makeArray,
  'def'         :   simply implement the method into the prototype of DOM,
                 and the returned value determined by the method
  */
-IMPLEMENT_GENERATOR = {
+var IMPLEMENT_GENERATOR = {
 
 // never used currently
 /**
@@ -336,7 +325,7 @@ extend({
      *        otherwise, returns the shadow array copy of all matched elements
      */
     get: function(index){
-        return K.isNumber(index) ? this[index] : slice.call(this, 0);
+        return lang.isNumber(index) ? this[index] : slice.call(this, 0);
     },
     
     // @deprecated
@@ -351,7 +340,7 @@ extend({
      */
     add: function(subject){
         var ret = DOM(this.get());
-        subject && K.pushUnique(ret, DOM(subject));
+        subject && lang.pushUnique(ret, DOM(subject));
         return ret;
     }
 });
@@ -359,32 +348,20 @@ extend({
 
 // traits
 // @private
-DOM.methods = {};
+// DOM.methods = {};
 
 
 // @temp
-DOM._ = DOMInit;
+// DOM._ = DOMInit;
 
 // @public
 // create basic methods and hooks
 DOM.__storage = {};
 
 // method for extension
-DOM.extend = extend;
+// extend 
+// DOM.extend = extend;
 
-// adaptor of selector engine
-DOM.SELECTOR = SELECTOR;
-
-// returns the $ object back to its original value
-// DOM.noConflict = function(){
-//    WIN.$ = _$;
-//    return DOM;
-// };
-
-K.DOM = DOM;
-
-    
-})(NR);
 
 /**
  change log:
