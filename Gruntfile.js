@@ -2,13 +2,17 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         jshint: {
-            all: ['Gruntfile.js', 'src/**/*.js'],
+            all: [
+                'Gruntfile.js', 
+                // 'src/**/*.js',
+                'lib/**/*.js'
+            ],
             options: require('./.jshintrc.js')
         },
 
         concat: {
             options: {
-                separator: ';'
+                separator: '\n\n'
             },
             dist: {
 
@@ -31,5 +35,7 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-concat");
-    grunt.registerTask("default", ["jshint"]);
+    grunt.registerTask("dev", ["jshint"]);
+    grunt.registerTask("default", ["concat"]);
+
 };
