@@ -1,8 +1,7 @@
 /**
  * module  DOM/traverse
  */
- 
-;(function(K){
+
 
 // TEMP!
 // adaptor of Slick parser object
@@ -19,16 +18,10 @@ function createSelectorObject(expression, combinator){
     }
 
     return expression;
-};
+}
 
 
-var 
-
-DOM = K.DOM,
-
-SELECTOR = K.S,
-
-TRAVERSING_CONFIG = {
+var TRAVERSING_CONFIG = {
 
     /**
      * @type {string} op selector operator
@@ -72,7 +65,7 @@ TRAVERSING_CONFIG = {
     }
 };
 
-K.each(TRAVERSING_CONFIG, function(cfg, key){
+lang.each(TRAVERSING_CONFIG, function(cfg, key){
     this[key] = function(selector){
     
         return SELECTOR.find(
@@ -100,7 +93,7 @@ K.each(TRAVERSING_CONFIG, function(cfg, key){
  </code>
  
  */
-DOM.extend(TRAVERSING_CONFIG).extend({
+extend(TRAVERSING_CONFIG).extend({
 
     // @return {Object} the new DOM instance with the first element of the current matches
     first: function(){
@@ -127,9 +120,6 @@ DOM.extend(TRAVERSING_CONFIG).extend({
     }
     
 });
-
-
-})(NR);
 
 
 /**

@@ -3,30 +3,28 @@
      - basic method to manipulate DOMElements
      - initialize all specified DOM related methods defined in previous modules
  */
- 
-;(function(K, NULL, undef){
 
 function hasClass(el, cls){
     var whitespace = WHITE_SPACE; 
     return (whitespace + el.className + whitespace).indexOf(whitespace + cls + whitespace) !== -1;
-};
+}
 
 function addClass(cls){
     if(!hasClass(this, cls)){
         this.className = ( this.className + WHITE_SPACE + cls ).trim();
     }
-};
+}
 
 function removeClass(cls){
     this.className = this.className.replace(new RegExp('(?:^|\\s+)' + cls + '(?:\\s+|$)'), ' ').trim();
-};
+}
 
 
 function getStorage(el){
     var id = SELECTOR.uid(el);
 
     return data_storage[id] || (data_storage[id] = {});
-};
+}
 
 
 // clear data stored in the specified element
@@ -39,13 +37,13 @@ function cleanElement(el){
     
     el.clearAttributes && el.clearAttributes();
     
-    K.each(storage, function(s){
+    lang.each(storage, function(s){
         var m = '_clean';
         
         // if has a cleaner method, use it
         s[m] ? s[m](id) : delete s[id];
     });
-};
+}
 
 
 /**
@@ -80,22 +78,19 @@ function cleanElement(el){
  */
 function overloadDOMGetterSetter(methods, getterArgLength){
     return function(){
-        var args = arguments,
-            first_arg = args[0],
-            
-            type, 
-            len = args.length, 
-            getter_len = getterArgLength,
-            m,
-            hook_methods,
-            no_getter_args = getter_len === 0;
+        var args = arguments;
+        var first_arg = args[0]; 
+        var len = args.length; 
+        var getter_len = getterArgLength;
+        var m;
+        var no_getter_args = getter_len === 0;
         
         // getter    
         if(
             getter_len === len && 
             
             // value() || get('value')
-            ( no_getter_args || K.isString(first_arg) )
+            ( no_getter_args || lang.isString(first_arg) )
         ){
             // getter always only deal with the value of the first element
             var first = this[0];
@@ -125,7 +120,7 @@ function overloadDOMGetterSetter(methods, getterArgLength){
         
         return this;
     };
-};
+}
 
 
 /**
@@ -140,7 +135,7 @@ function getFirstContext(element){
     return element 
        && (element = element._ === atom ? element[0] : element) && element.nodeType ? 
            element : false;
-};
+}
 
 
 /**
@@ -155,14 +150,14 @@ function getAllContexts(element){
     return element && element._ === atom ? element.get() : makeArray(element).filter(function(el){
         return el && el.nodeType;
     });
-};
+}
 
 
 // @this {DOMElement}
 function disposeElement(){
     var parent = this.parentNode;
     parent && parent.removeChild(this);
-};
+}
 
 // @this {DOMElement}
 function emptyElement(){
@@ -172,7 +167,7 @@ function emptyElement(){
     makeArray(this.childNodes).forEach(function(child){
         disposeElement.call(child);
     });
-};
+}
 
 
 function grabElements(element, elements, where){
@@ -184,40 +179,27 @@ function grabElements(element, elements, where){
     elements.forEach(function(el){
         el && inserters[where || 'bottom'](el, element);
     });
-};
+}
 
 
 function getOptionValue(el){
     var valueNode = el.getAttributeNode('value');
     return !valueNode || valueNode.specified ? el.value : el.text;
-};
+}
 
 
 function santitizeValue(value){
     return value == null ? '' : value + '';
-};
+}
+    
+var data_storage = storage.data = {};
 
-
-var DOM = K.DOM,
-    SELECTOR = DOM.SELECTOR,
-    storage = DOM.__storage,
-    makeArray = K.makeArray,
-    
-    WHITE_SPACE = ' ',
-    
-    // @type {Object}
-    // list of methods for both getter and setter
-    METHODS = DOM.methods,
-    
-    data_storage = storage.data = {},
-    atom = K._,
-    
-    TRUE = true,
+var WHITE_SPACE = ' ';
     
     // .attr() method will no longer deal with 'html' and 'text' 
     // so they are now excluded in ATTR_CONVERT and ATTR_KEY
     
-    ATTR_CONVERT = {
+var ATTR_CONVERT = {
         // defaultvalue    : 'defaultValue',
         tabindex        : 'tabIndex',
         readonly        : 'readOnly',
@@ -233,28 +215,28 @@ var DOM = K.DOM,
         contenteditable    : 'contentEditable' // ,
         // type            : 'type',
         // html            : 'innerHTML',
-    },
+    };
     
-    ATTR_TEXT = function(){
+var ATTR_TEXT = function(){
         var STR_TEXTCONTENT = 'textContent';
         
         // TODO: test if memleak
         return STR_TEXTCONTENT in document.createElement('div') ? STR_TEXTCONTENT : 'innerText';
-    }(),
+    }();
     
-    ATTR_KEY = {
+var ATTR_KEY = {
         // html    : TRUE,
         // text    : TRUE,
         'for'    : TRUE,
         'class'    : TRUE,
         type    : TRUE  // TODO: test readonly property
-    },
+    };
     
-    REGEX_IS_URI_ATTR = /^(?:href|src|usemap)$/i,
+var REGEX_IS_URI_ATTR = /^(?:href|src|usemap)$/i;
     
-    ATTR_BOOLS = ['compact', 'nowrap', 'ismap', 'declare', 'noshade', 'checked', 'disabled', 'readOnly', 'multiple', 'selected', 'noresize', 'defer', 'defaultChecked'],
+var ATTR_BOOLS = ['compact', 'nowrap', 'ismap', 'declare', 'noshade', 'checked', 'disabled', 'readOnly', 'multiple', 'selected', 'noresize', 'defer', 'defaultChecked'];
     
-    inserters = {
+var inserters = {
         before: function(context, element){
             var parent = element.parentNode;
             parent && parent.insertBefore(context, element);
@@ -272,9 +254,9 @@ var DOM = K.DOM,
         top: function(context, element){
             element.insertBefore(context, element.firstChild);
         }
-    },
+    };
     
-    val_traits = {
+var val_traits = {
         option: {
             GET: getOptionValue 
         },
@@ -291,7 +273,7 @@ var DOM = K.DOM,
                 
                 // in IE(tested up to IE9), <select>.options === <select>
                 // so you couldn't makeArray el.options by detecting the type of el.options, but have to force making.
-                makeArray.merge(el.options, []).forEach(function(option, i){
+                makeArray.merge(el.options, []).forEach(function(option){
                     option.selected = values.indexOf( getOptionValue(option) ) !== -1;
                 });
 
@@ -304,13 +286,13 @@ var DOM = K.DOM,
     
     
 // .attr() methods
-METHODS.attr = {
+methods.attr = {
 
     // arguments length of getter: 1
     len: 1,
     
     // attribute setter
-    SET: K._overloadSetter( function(name, value){
+    SET: lang.overloadSetter( function(name, value){
         var prop = ATTR_CONVERT[name] || name;
         
         name in ATTR_KEY ? 
@@ -355,10 +337,10 @@ METHODS.attr = {
     
 
 // .data() methods
-METHODS.data = {
+methods.data = {
     len: 1,
     
-    SET: K._overloadSetter( function(name, value){
+    SET: lang.overloadSetter( function(name, value){
         var s = getStorage(this);
         s[name] = value;
     }),
@@ -378,7 +360,7 @@ METHODS.data = {
  
  * .html() is a getter
  */
-METHODS.html = {
+methods.html = {
 
     /**
      * avoid using .html('')
@@ -424,7 +406,7 @@ METHODS.html = {
                 
                 while(dimension --){
                     c = c.firstChild;
-                };
+                }
                 
                 emptyElement.call(this);
                 grabElements(this, c.childNodes);
@@ -442,7 +424,7 @@ METHODS.html = {
 
     
 // .text() methods
-METHODS.text = {
+methods.text = {
     SET: function(text){
         emptyElement.call(this);
         this[ATTR_TEXT] = text;
@@ -455,7 +437,7 @@ METHODS.text = {
 
 
 // .val() methods
-METHODS.val = {
+methods.val = {
     SET: function(value){
         // prevent set window or document
         if(this.nodeType !== 1){
@@ -467,7 +449,7 @@ METHODS.val = {
             
         method && ( method = method.SET );
             
-        value = K.isArray(value) ? value.map(santitizeValue) : santitizeValue(value);
+        value = lang.isArray(value) ? value.map(santitizeValue) : santitizeValue(value);
             
         method ? method(this, value) : (this.value = value);
     },
@@ -483,7 +465,7 @@ METHODS.val = {
 };
 
 
-DOM.extend({
+extend({
 
     addClass: addClass,
     
@@ -494,7 +476,7 @@ DOM.extend({
     },
     
     removeData: function(name){
-        if(name === undef){
+        if(name === undefined){
             var id = SELECTOR.uid(this);
             id && delete data_storage[id];
         }else{
@@ -543,7 +525,7 @@ DOM.extend({
         var self = this;
         
         self.forEach(function(el, i){
-            var children = K.makeArray( el.getElementsByTagName('*') );
+            var children = lang.makeArray( el.getElementsByTagName('*') );
             
             children.push(el);
             children.forEach(cleanElement);
@@ -561,17 +543,13 @@ DOM.extend({
 
 
 // extend setter and getter(batch or single) methods
-K.each(METHODS, function(method, name){
+lang.each(methods, function(method, name){
     this[name] = overloadDOMGetterSetter(method, method.len || 0);
     delete method.len;
 });
 
 
-DOM.extend(METHODS);
-
-DOM._overload = overloadDOMGetterSetter;
-
-})(NR, null);
+extend(methods);
 
 
 /**

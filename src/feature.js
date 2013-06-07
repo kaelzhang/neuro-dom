@@ -4,12 +4,29 @@
     - util methods about dom
  */
 
-NR.DOM.feature = function(){
+var feature = DOM.feature = function(){
+
+var NULL = null;
+
+var REGEX_HYHPENATE = /[A-Z]/g;
+var REGEX_CAMELCASE = /-([a-z])/ig;
+
+var defaultView = DOC.defaultView;
+var element_test = DOC.createElement('div');
+var input_test;
+    
+var ADD_EVENT_LISTENER = 'addEventListener';
+var REMOVE_EVENT_LISTENER = 'removeEventListener';
+    
+var create_element_accepts_html;
+var escapeQuotes;
+    
+var a;
 
 
 function elementsByTagName(wrap, tagName){
     return wrap.getElementsByTagName(tagName);
-};
+}
 
 // makes sure that element is a DOMElement/DOMDocument
 function getDocument(element){
@@ -19,38 +36,19 @@ function getDocument(element){
         // document
         : 'getElementById' in element ? element 
             : element.ownerDocument;
-};
+}
 
 function hyphenate(str){
     return str.replace(REGEX_HYHPENATE, function(matchAll){
         return '-' + matchAll;
     });
-};
+}
 
 function camelCase(str){
     return str.replace(REGEX_CAMELCASE, function(matchAll, match1){
         return match1.toUpperCase();
     });
-};
-
-
-var NULL = null,
-
-    REGEX_HYHPENATE = /[A-Z]/g,
-    REGEX_CAMELCASE = /-([a-z])/ig,
-    
-    DOC = document,
-    defaultView = DOC.defaultView,
-    element_test = DOC.createElement('div'),
-    input_test,
-    
-    ADD_EVENT_LISTENER = 'addEventListener',
-    REMOVE_EVENT_LISTENER = 'removeEventListener',
-    
-    create_element_accepts_html,
-    escapeQuotes,
-    
-    a;
+}
 
 element_test.innerHTML = ' <link/><table></table><a href="/a" style="top:1px;float:left;opacity:.7;">a</a><input type="checkbox"/>';
 
@@ -58,7 +56,7 @@ a = elementsByTagName(element_test, 'a')[0];
 
 try {
     input_test = DOC.createElement('<input name=x>');
-    create_element_accepts_html = input_test.name == 'x';
+    create_element_accepts_html = input_test.name === 'x';
     
     escapeQuotes = function(html){
         return ('' + html).replace(/&/g, '&amp;').replace(/"/g, '&quot;');

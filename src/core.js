@@ -25,6 +25,11 @@
  */
 
 var lang = require('neuro-lang');
+var ua = require('neuro-ua');
+var SELECTOR = require('slick').adapter;
+
+var NULL = null;
+var undefined;
 
 // exports
 module.exports = DOM;
@@ -349,6 +354,7 @@ extend({
 // traits
 // @private
 // DOM.methods = {};
+var methods = {};
 
 
 // @temp
@@ -356,7 +362,7 @@ extend({
 
 // @public
 // create basic methods and hooks
-DOM.__storage = {};
+var storage = DOM.__storage = {};
 
 // method for extension
 // extend 

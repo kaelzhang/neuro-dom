@@ -1,12 +1,9 @@
-/**
- * module  DOM/css
- */
-;(function(K, NULL){
 
 
 // from jQuery
 function swap(element, styles, callback){
-    var old = {}, name;
+    var old = {};
+    var name;
 
     // Remember the old values, and insert the new ones
     for(name in styles){
@@ -35,15 +32,14 @@ function swap(element, styles, callback){
  * never determine your control flow by css styles!
  */
 function getCSS(name){
-    var 
-    
+
     // 'float'          -> 'cssFloat'
     // 'margin-right'   -> 'marginRight'
-    property = cssProp(name),
+    var property = cssProp(name);
     
-    el = this,
-    ret,
-    specified = CSS_methods[property];
+    var el = this;
+    var ret;
+    var specified = CSS_methods[property];
         
     if(specified && specified.GET){
         ret = specified.GET(el);
@@ -64,8 +60,8 @@ function getCSS(name){
  * get width and height of an element
  */
 function getWH(element, property){
-    var minus = property === 'width' ? ['left', 'right'] : ['top', 'bottom'], 
-        ret = element[camelCase('offset-' + property)];
+    var minus = property === 'width' ? ['left', 'right'] : ['top', 'bottom'];
+    var ret = element[feature.camelCase('offset-' + property)];
         
     if(!ret || ret < 0){
         ret = currentCSS(element, property) || element.style[property];
@@ -85,49 +81,40 @@ function getWH(element, property){
 };
 
 
-var DOM  = K.DOM,
-    UA   = K.UA,
-    DOC  = document,
-    HTML = DOC.documentElement,
-    TRUE = true,
-
-    REGEX_OPACITY      = /opacity=([^)]*)/,
-    REGEX_FILTER_ALPHA = /alpha\([^)]*\)/i,
+var REGEX_OPACITY      = /opacity=([^)]*)/;
+var REGEX_FILTER_ALPHA = /alpha\([^)]*\)/i;
     // REGEX_NUM_PX = /^-?\d+(?:px)?$/i,
     // REGEX_NUM = /^-?\d+/,
     
-    // 0.123
-    // .23
-    // 23.456
-    // 23.456e7
-    // 23.456E7
-    // Number('- 123') -> NaN
-    // Number('-123')  -> -123
-    _REGEX_NUM = /[-+]?(?:\d*\.)?\d+(?:e[-+]?\d+)?/i,
+// 0.123
+// .23
+// 23.456
+// 23.456e7
+// 23.456E7
+// Number('- 123') -> NaN
+// Number('-123')  -> -123
+var REGEX_NUM = /^[+\-]?(?:\d*\.)?\d+(?:e[+\-]?\d+)?$/i;
     
-    // 23em
-    // 100%
-    REGEX_NON_PIXEL_NUM_VALUE = new RegExp( '^' + _REGEX_NUM.source + '(?!px)[a-z%]+$', 'i' ),
-    REGEX_NUM_OR_NUM_STRING   = new RegExp( '^' + _REGEX_NUM.source + '$', 'i'),
-    REGEX_NEGATIVE            = /^-/,
+// 23em
+// 100%
+var REGEX_NON_PIXEL_NUM_VALUE = new RegExp( '^' + REGEX_NUM.source + '(?!px)[a-z%]+$', 'i' );
+var REGEX_NUM_OR_NUM_STRING   = new RegExp( '^' + REGEX_NUM.source + '$', 'i');
+var REGEX_NEGATIVE            = /^-/;
     
-    STYLE_INVISIBLE_SHOW = {
+var STYLE_INVISIBLE_SHOW = {
         position    : 'absolute',
         visibility    : 'hidden',
         display        : 'block'
-    },
+    };
     
-    feature = DOM.feature,
-    
-    currentCSS = feature.curCSS,
-    cssProp = feature.cssProp,
-    camelCase = feature.camelCase,
+var currentCSS = feature.curCSS;
+var cssProp = feature.cssProp;
                                                  
-    STR_FLOAT_NAME = feature.floatName,
+var STR_FLOAT_NAME = feature.floatName;
         
-    CSS_methods = {},
+var CSS_methods = {};
     
-    CSS_CAN_BE_SINGLE_PX = {
+var CSS_CAN_BE_SINGLE_PX = {
         // offset
         // left: TRUE, top: TRUE, bottom: TRUE, right: TRUE,
         
@@ -279,7 +266,7 @@ if(!feature.opacity){
 
 
 // add css getter and setter to DOM hook functions
-DOM.methods.css = {
+methods.css = {
     len: 1,
     
     /**
@@ -287,7 +274,7 @@ DOM.methods.css = {
      * @param {number|string} value
          setter of css will be simple, value will not accept Array. unlike mootools
      */
-    SET: K._overloadSetter(function(name, value){
+    SET: lang.overloadSetter(function(name, value){
         name = cssProp(name);
     
         var el = this,
@@ -322,8 +309,6 @@ DOM.methods.css = {
     GET: getCSS    
 };
 
-
-})(NR, null);
 
 /**
  change log:

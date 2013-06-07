@@ -6,10 +6,6 @@
 
 // TODO!!!!!  complete event
  
-
-;(function(K, undef){
-
-
 /**
  * Custom domready event
  * @private
@@ -25,25 +21,20 @@ function domready(){
 }
 
 function fire_domready(){
-    var self = this,
-        r = readyList, fn;
-        
-    if(r){    
-        for(var i = 0, len = r.length; i < len; i ++){
-            fn = r[i]
-            fn && fn.call(WIN, K);
-        }
+    var D = DOM;
 
-        r.length = 0;
-        readyList = null;
-    }
-};
+    readyList.forEach(function(fn) {
+        fn && fn(D);
+    
+    }).length = 0;
+
+    readyList = NULL;
+}
 
 
 function bind_domready(){
-    // is_domready_binded = true;
 
-    var doc = WIN.document;
+    var doc = DOC;
     
     // Catch cases where ready() is called after the
     // browser event has already occurred.
@@ -75,7 +66,7 @@ function bind_domready(){
         var not_framed = false;
         
         try {
-            not_framed = win.frameElement == null;
+            not_framed = WIN.frameElement == null;
         } catch(e) {}
         
         // if not a frame
@@ -94,20 +85,13 @@ function bind_domready(){
             };
         }
     }
-};
+}
 
 
-var 
-
-is_domready = false,
+var is_domready = false;
 // is_domready_binded = false,
 
-DOM = K.DOM,
-
-readyList = [],
-
-// @const
-WIN = window;
+var readyList = [];
     
 // @removed
 // always use NR.ready(fn) instead
@@ -120,12 +104,12 @@ WIN = window;
  * window.addEvent('domready', fn) has been carried here, and has no more support
  * @param {function()} fn the function to be executed when dom is ready
  */
-K.ready = function(fn){
+DOM.ready = function(fn){
     // delay the initialization of binding domready, making page render faster
     // is_domready_binded || bind_domready();
     
     if(is_domready){
-        fn.call(WIN, this);
+        fn(DOM);
     }else{
         readyList.push(fn);
     }
@@ -133,9 +117,6 @@ K.ready = function(fn){
 
 
 bind_domready();
-
-
-})(NR);
 
 /**
  2012-09-24  Kael:
